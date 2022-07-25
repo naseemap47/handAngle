@@ -1,19 +1,12 @@
 import cv2
-import streamlit as st
 import mediapipe as mp
 import math
 from findPoints import find_points
 
-st.title("Webcam Live Feed")
-run = st.checkbox('Run')
-FRAME_WINDOW = st.image([])
-camera = cv2.VideoCapture(2)
-
-# 2nd Stage
-predict = st.checkbox('Run Outs')
+cap = cv2.VideoCapture(2)
 
 mp_hand = mp.solutions.hands
-hand = mp_hand.Hands(max_num_hands=2)
+hand = mp_hand.Hands(max_num_hands=1)
 mp_draw = mp.solutions.drawing_utils
 
 # Ref-points
@@ -24,8 +17,8 @@ line_points = []
 x_list = []
 y_list = []
 
-while run:
-    success, img = camera.read()
+while True:
+    success, img = cap.read()
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     results = hand.process(img_rgb)
 
@@ -71,23 +64,13 @@ while run:
                     point, (0, 255, 0), 5
                 )
 
-                
-
-    img_rgb_out = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    FRAME_WINDOW.image(img_rgb_out)
-    if predict:
+    cv2.imshow('img', img)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
         break
-    
-# else:
-#     st.write('Stopped')
 
-
-# 2nd Stage
-# run = st.checkbox('Run Outs')
-camera = cv2.VideoCapture(2)
-FRAME_WINDOW = st.image([])
-while predict:
-    success, img = camera.read()
+while True:
+    success, img = cap.read()
     # Line - Angle
     if len(line_points) > 10:
         p1, p2, p3, p4 = find_points(line_points)
@@ -126,7 +109,7 @@ while predict:
             2, (0, 255, 0), 2
         )
 
-    img_rgb_out = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    FRAME_WINDOW.image(img_rgb_out)
-else:
-    st.write('Stopped')
+    cv2.imshow('out', img)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
+        break
