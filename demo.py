@@ -4,13 +4,11 @@ import mediapipe as mp
 import math
 from findPoints import find_points
 
+
 st.title("Webcam Live Feed")
 run = st.checkbox('Run')
 FRAME_WINDOW = st.image([])
 camera = cv2.VideoCapture(2)
-
-# 2nd Stage
-predict = st.checkbox('Run Outs')
 
 mp_hand = mp.solutions.hands
 hand = mp_hand.Hands(max_num_hands=2)
@@ -75,20 +73,7 @@ while run:
 
     img_rgb_out = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     FRAME_WINDOW.image(img_rgb_out)
-    if predict:
-        break
-    
-# else:
-#     st.write('Stopped')
-
-
-# 2nd Stage
-# run = st.checkbox('Run Outs')
-camera = cv2.VideoCapture(2)
-FRAME_WINDOW = st.image([])
-while predict:
-    success, img = camera.read()
-    # Line - Angle
+    # if predict:
     if len(line_points) > 10:
         p1, p2, p3, p4 = find_points(line_points)
         cv2.circle(
@@ -119,7 +104,7 @@ while predict:
             math.atan2(p4[1] - p2[1], p4[0] - p2[0]) -
             math.atan2(p1[1] - p2[1], p1[0] - p2[0])
         )
-        print(angle-180)
+        # print(angle-180)
         cv2.putText(
             img, f'Angle:{int(angle-180)}',
             (50, 50), cv2.FONT_HERSHEY_PLAIN,
@@ -128,5 +113,8 @@ while predict:
 
     img_rgb_out = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     FRAME_WINDOW.image(img_rgb_out)
+
+
 else:
-    st.write('Stopped')
+    st.markdown('Stopped!!')
+
