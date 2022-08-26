@@ -1,9 +1,8 @@
 import cv2
 import mediapipe as mp
-import math
+
 
 cap = cv2.VideoCapture(2)
-
 mp_hand = mp.solutions.hands
 hand = mp_hand.Hands(max_num_hands=1)
 mp_draw = mp.solutions.drawing_utils
@@ -53,7 +52,7 @@ while True:
     )
 
     # Flip Webcam feed
-    img = cv2.flip(img,-1)
+    img = cv2.flip(img, -1)
 
     if results.multi_hand_landmarks:
         landmaks_list = []
@@ -64,24 +63,25 @@ while True:
                 x, y = int(lm.x * w), int(lm.y * h)
 
                 if id == 8:
-                    landmaks_list.append([handType.classification[0].label, x, y])
+                    landmaks_list.append(
+                        [handType.classification[0].label, x, y])
                     if landmaks_list[0][0] == 'Left':
                         r_x = landmaks_list[0][1]
                         r_y = landmaks_list[0][2]
                         line_points.append([r_x, r_y])
-    
-        print(line_points)
-        if len(line_points)>0:
+
+        # print(line_points)
+        if len(line_points) > 0:
 
             # Working Area
-            if (ref3[0]-80)<line_points[0][0]<(ref3[0]+80) and (ref3[1]-80)<line_points[0][1]<(ref3[1]+80):
+            if (ref3[0]-80) < line_points[0][0] < (ref3[0]+80) and (ref3[1]-80) < line_points[0][1] < (ref3[1]+80):
                 cv2.putText(
                     img, 'Work Started!!', (40, 50),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
                 )
 
-            if (ref2[0]-20)<line_points[0][0]<(ref2[0]+20):
-                if (ref2[1]-20)<line_points[0][1]<(ref2[1]+20):
+            if (ref2[0]-20) < line_points[0][0] < (ref2[0]+20):
+                if (ref2[1]-20) < line_points[0][1] < (ref2[1]+20):
                     cv2.putText(
                         img, 'Work Ended!!', (40, 50),
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
@@ -91,14 +91,13 @@ while True:
                         img, 'Warning!!', (40, 50),
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
                     )
-        
+
         else:
             cv2.putText(
-                    img, 'Hand NOT Detected!!', (40, 50),
-                    cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
-                )
+                img, 'Hand NOT Detected!!', (40, 50),
+                cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
+            )
 
-    # img = cv2.flip(img,-1)
     cv2.imshow('img', img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
