@@ -80,11 +80,17 @@ while True:
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
                 )
 
-            if (ref2[0]-20)<line_points[0][0]<(ref2[0]+20) and (ref2[1]-20)<line_points[0][1]<(ref2[1]+20):
-                cv2.putText(
-                    img, 'Work Ended!!', (40, 50),
-                    cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
-                )
+            if (ref2[0]-20)<line_points[0][0]<(ref2[0]+20):
+                if (ref2[1]-20)<line_points[0][1]<(ref2[1]+20):
+                    cv2.putText(
+                        img, 'Work Ended!!', (40, 50),
+                        cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
+                    )
+                else:
+                    cv2.putText(
+                        img, 'Warning!!', (40, 50),
+                        cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
+                    )
         
         else:
             cv2.putText(
