@@ -9,7 +9,7 @@ hand = mp_hand.Hands(max_num_hands=1)
 mp_draw = mp.solutions.drawing_utils
 
 # Ref-points
-ref1 = (240, 400)
+ref1 = (250, 400)
 ref2 = (20, 180)
 ref3 = (250, 180)
 
@@ -42,9 +42,18 @@ while True:
 
     # Working Area
     cv2.rectangle(
-        img, (150, 80), (350, 280),
-        (0, 255, 0), 3
+        img, (ref3[0]-80, ref3[1]-80),
+        (ref3[0]+80, ref3[1]+80), (0, 255, 0), 3
     )
+
+    # Process Ending Area
+    cv2.rectangle(
+        img, (ref2[0]-20, ref2[1]-20),
+        (ref2[0]+20, ref2[1]+20), (255, 255, 0), 3
+    )
+
+    # Flip Webcam feed
+    img = cv2.flip(img,-1)
 
     if results.multi_hand_landmarks:
         landmaks_list = []
@@ -61,13 +70,22 @@ while True:
                         r_y = landmaks_list[0][2]
                         line_points.append([r_x, r_y])
     
-        # Working Area
+        print(line_points)
         if len(line_points)>0:
-            if 150<line_points[0][0]<350 and 80<line_points[0][0]<280:
+
+            # Working Area
+            if (ref3[0]-80)<line_points[0][0]<(ref3[0]+80) and (ref3[1]-80)<line_points[0][1]<(ref3[1]+80):
                 cv2.putText(
                     img, 'Work Started!!', (40, 50),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
                 )
+
+            if (ref2[0]-20)<line_points[0][0]<(ref2[0]+20) and (ref2[1]-20)<line_points[0][1]<(ref2[1]+20):
+                cv2.putText(
+                    img, 'Work Ended!!', (40, 50),
+                    cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
+                )
+        
         else:
             cv2.putText(
                     img, 'Hand NOT Detected!!', (40, 50),
