@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import os
 
 
 cap = cv2.VideoCapture(2)
@@ -87,6 +88,7 @@ while True:
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
                     )
                 else:
+                    os.system('spd-say "Warning"')
                     cv2.putText(
                         img, 'Warning!!', (40, 50),
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
