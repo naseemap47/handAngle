@@ -23,7 +23,7 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, cam_width)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, cam_height)
 
 mp_hand = mp.solutions.hands
-hand = mp_hand.Hands(max_num_hands=1)
+hand = mp_hand.Hands(max_num_hands=2)
 mp_draw = mp.solutions.drawing_utils
 
 # Ref-points
