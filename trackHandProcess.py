@@ -3,7 +3,7 @@ import mediapipe as mp
 import os
 
 
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(0)
 mp_hand = mp.solutions.hands
 hand = mp_hand.Hands(max_num_hands=1)
 mp_draw = mp.solutions.drawing_utils
