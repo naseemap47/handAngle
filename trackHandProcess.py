@@ -5,34 +5,40 @@ import argparse
 
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--cam", type=int, required=True,
-                help="Web-cam port")
-ap.add_argument("--cam_width", type=int, required=True,
-                help="Size of web-cam width")
-ap.add_argument("--cam_height", type=int, required=True,
-                help="Size of web-cam height")
+ap.add_argument("--source", type=str, required=True,
+                help="Web-cam port or path to video")
+ap.add_argument("--source_width", type=int, required=True,
+                help="Width of source (web-cam or video)")
+ap.add_argument("--source_height", type=int, required=True,
+                help="Height of source (web-cam or video)")
 
 
 args = vars(ap.parse_args())
-cam = args["cam"]
-cam_width = args["cam_width"]
-cam_height = args["cam_height"]
+source = args["source"]
+source_width = args["source_width"]
+source_height = args["source_height"]
 
-cap = cv2.VideoCapture(cam)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, cam_width)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, cam_height)
+if source.isnumeric():
+    source = int(source)
+
+cap = cv2.VideoCapture(source)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, source_width)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, source_height)
 
 mp_hand = mp.solutions.hands
 hand = mp_hand.Hands(max_num_hands=2)
 mp_draw = mp.solutions.drawing_utils
 
 # Ref-points
-ref1 = (int(cam_width*0.46875), int(cam_height*0.8333))
-ref2 = (int(cam_width*0.109375), int(cam_height*0.375))
-ref3 = (int(cam_width*0.46875), int(cam_height*0.375))
+ref1 = (int(source_width*0.46875), int(source_height*0.8333))
+ref2 = (int(source_width*0.109375), int(source_height*0.375))
+ref3 = (int(source_width*0.46875), int(source_height*0.375))
 
 while True:
     success, img = cap.read()
+    if not success:
+        break
+    img = cv2.resize(img, (source_width, source_height))
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     results = hand.process(img_rgb)
 
