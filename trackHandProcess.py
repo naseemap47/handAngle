@@ -34,6 +34,9 @@ ref1 = (int(source_width*0.46875), int(source_height*0.8333))
 ref2 = (int(source_width*0.109375), int(source_height*0.375))
 ref3 = (int(source_width*0.46875), int(source_height*0.375))
 
+working_area_size = 130
+end_area_size = 35
+
 while True:
     success, img = cap.read()
     if not success:
@@ -43,6 +46,10 @@ while True:
     results = hand.process(img_rgb)
 
     # Ref-Line
+    cv2.line(
+        img, ref2, ref1,
+        (0, 255, 255), 2
+    )
     cv2.line(
         img, ref3, ref1,
         (0, 255, 255), 2
@@ -66,18 +73,18 @@ while True:
 
     # Working Area
     cv2.rectangle(
-        img, (ref3[0]-80, ref3[1]-80),
-        (ref3[0]+80, ref3[1]+80), (0, 255, 0), 3
+        img, (ref3[0]-working_area_size, ref3[1]-working_area_size),
+        (ref3[0]+working_area_size, ref3[1]+working_area_size), (0, 255, 0), 3
     )
 
     # Process Ending Area
     cv2.rectangle(
-        img, (ref2[0]-30, ref2[1]-30),
-        (ref2[0]+30, ref2[1]+30), (255, 255, 0), 3
+        img, (ref2[0]-end_area_size, ref2[1]-end_area_size),
+        (ref2[0]+end_area_size, ref2[1]+end_area_size), (255, 255, 0), 3
     )
 
     # Flip Webcam feed
-    img = cv2.flip(img, -1)
+    # img = cv2.flip(img, -1)
 
     if results.multi_hand_landmarks:
         landmaks_list = []
@@ -87,7 +94,7 @@ while True:
                 h, w, c = img.shape
                 x, y = int(lm.x * w), int(lm.y * h)
 
-                if id == 8:
+                if id == 8 or id == 4:
                     landmaks_list.append(
                         [handType.classification[0].label, x, y])
                     if landmaks_list[0][0] == 'Left':
@@ -99,14 +106,14 @@ while True:
         if len(line_points) > 0:
 
             # Working Area
-            if (ref3[0]-80) < line_points[0][0] < (ref3[0]+80) and (ref3[1]-80) < line_points[0][1] < (ref3[1]+80):
+            if (ref3[0]-working_area_size) < line_points[0][0] < (ref3[0]+working_area_size) and (ref3[1]-working_area_size) < line_points[0][1] < (ref3[1]+working_area_size):
                 cv2.putText(
                     img, 'Work Started!!', (40, 50),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
                 )
 
-            if (ref2[0]-30) < line_points[0][0] < (ref2[0]+30):
-                if (ref2[1]-30) < line_points[0][1] < (ref2[1]+30):
+            if (ref2[0]-end_area_size) < line_points[0][0] < (ref2[0]+end_area_size):
+                if (ref2[1]-end_area_size) < line_points[0][1] < (ref2[1]+end_area_size):
                     cv2.putText(
                         img, 'Work Ended!!', (40, 50),
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
