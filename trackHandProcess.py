@@ -11,12 +11,15 @@ ap.add_argument("--source", type=str, required=True,
 #                 help="Width of source (web-cam or video)")
 # ap.add_argument("--source_height", type=int, required=True,
 #                 help="Height of source (web-cam or video)")
+ap.add_argument("--save", action='store_true',
+                help="Save video")
 
 
 args = vars(ap.parse_args())
 source = args["source"]
 # source_width = args["source_width"]
 # source_height = args["source_height"]
+save = args['save']
 
 source_width = 1300
 source_height = 650
@@ -27,6 +30,12 @@ if source.isnumeric():
 cap = cv2.VideoCapture(source)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, source_width)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, source_height)
+
+# Write Video
+if save:
+    result = cv2.VideoWriter('output.avi', 
+                         cv2.VideoWriter_fourcc(*'MJPG'),
+                         10, (source_width, source_height))
 
 mp_hand = mp.solutions.hands
 hand = mp_hand.Hands(max_num_hands=2)
@@ -137,8 +146,15 @@ while True:
                 img, 'Hand NOT Detected!!', (40, 50),
                 cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
             )
+    # Write Video
+    if save:
+        result.write(img)
 
     cv2.imshow('img', img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
         break
+
+cap.release()
+if save:
+    result.release()
+cv2.destroyAllWindows()
