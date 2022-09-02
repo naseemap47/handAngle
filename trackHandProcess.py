@@ -30,15 +30,11 @@ hand = mp_hand.Hands(max_num_hands=2)
 mp_draw = mp.solutions.drawing_utils
 
 # Ref-points
-# ref1 = (int(source_width*0.46875), int(source_height*0.8333))
-# ref2 = (int(source_width*0.109375), int(source_height*0.375))
-# ref3 = (int(source_width*0.46875), int(source_height*0.375))
-
-ref1 = (int(source_width*0.46875), 450)
-ref2 = (1000, 450)
+ref1 = (int(source_width*0.46875), int(source_height*0.8333))
+ref2 = (int(source_width*0.109375), int(source_height*0.375))
 ref3 = (int(source_width*0.46875), int(source_height*0.375))
 
-working_area_size = 100
+working_area_size = 130
 end_area_size = 35
 
 while True:
@@ -98,7 +94,7 @@ while True:
                 h, w, c = img.shape
                 x, y = int(lm.x * w), int(lm.y * h)
 
-                if id == 8:
+                if id == 8 or id == 4:
                     landmaks_list.append(
                         [handType.classification[0].label, x, y])
                     if landmaks_list[0][0] == 'Left':
