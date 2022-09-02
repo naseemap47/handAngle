@@ -7,16 +7,19 @@ import argparse
 ap = argparse.ArgumentParser()
 ap.add_argument("--source", type=str, required=True,
                 help="Web-cam port or path to video")
-ap.add_argument("--source_width", type=int, required=True,
-                help="Width of source (web-cam or video)")
-ap.add_argument("--source_height", type=int, required=True,
-                help="Height of source (web-cam or video)")
+# ap.add_argument("--source_width", type=int, required=True,
+#                 help="Width of source (web-cam or video)")
+# ap.add_argument("--source_height", type=int, required=True,
+#                 help="Height of source (web-cam or video)")
 
 
 args = vars(ap.parse_args())
 source = args["source"]
-source_width = args["source_width"]
-source_height = args["source_height"]
+# source_width = args["source_width"]
+# source_height = args["source_height"]
+
+source_width = 1300
+source_height = 650
 
 if source.isnumeric():
     source = int(source)
@@ -30,8 +33,12 @@ hand = mp_hand.Hands(max_num_hands=2)
 mp_draw = mp.solutions.drawing_utils
 
 # Ref-points
-ref1 = (int(source_width*0.46875), int(source_height*0.8333))
-ref2 = (int(source_width*0.109375), int(source_height*0.375))
+# ref1 = (int(source_width*0.46875), int(source_height*0.8333))
+# ref2 = (int(source_width*0.109375), int(source_height*0.375))
+# ref3 = (int(source_width*0.46875), int(source_height*0.375))
+
+ref1 = (int(source_width*0.46875), 450)
+ref2 = (1000, 450)
 ref3 = (int(source_width*0.46875), int(source_height*0.375))
 
 working_area_size = 130
@@ -108,7 +115,7 @@ while True:
             # Working Area
             if (ref3[0]-working_area_size) < line_points[0][0] < (ref3[0]+working_area_size) and (ref3[1]-working_area_size) < line_points[0][1] < (ref3[1]+working_area_size):
                 cv2.putText(
-                    img, 'Work Started!!', (40, 50),
+                    img, 'Work Progressing..', (40, 50),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
                 )
 
