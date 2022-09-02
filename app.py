@@ -33,10 +33,22 @@ if options == 'Video':
         cap = cv2.VideoCapture(video_option)
 
 # Ref-points
-ref1 = (int(width*0.46875), int(height*0.8333))
-ref2 = (int(width*0.109375), int(height*0.375))
-ref3 = (int(width*0.46875), int(height*0.375))
+# ref1 = (int(width*0.46875), int(height*0.8333))
+ref1_x = st.sidebar.slider('ref1_x:', 0, 1000, int(width*0.46875))
+ref1_y = st.sidebar.slider('ref1_y:', 0, 1000, int(height*0.8333))
+ref1 = (int(ref1_x), int(ref1_y))
+# ref2 = (int(width*0.109375), int(height*0.375))
+ref2_x = st.sidebar.slider('ref2_x:', 0, 1000, int(width*0.109375))
+ref2_y = st.sidebar.slider('ref2_y:', 0, 1000, int(height*0.375))
+ref2 = (int(ref2_x), int(ref2_y))
+# ref3 = (int(width*0.46875), int(height*0.375))
+ref3_x = st.sidebar.slider('ref3_x:', 0, 1000, int(width*0.46875))
+ref3_y = st.sidebar.slider('ref3_y:', 0, 1000, int(height*0.375))
+ref3 = (int(ref3_x), int(ref3_y))
 
+# Area Size
+working_area_size = st.sidebar.slider('Working Area Size:', 0, 200, 80)
+end_area_size = st.sidebar.slider('End Area Size:', 0, 100, 30)
 
 if st.checkbox('Start Process'):    
     while True:
@@ -72,14 +84,14 @@ if st.checkbox('Start Process'):
 
         # Working Area
         cv2.rectangle(
-            img, (ref3[0]-80, ref3[1]-80),
-            (ref3[0]+80, ref3[1]+80), (0, 255, 0), 3
+            img, (ref3[0]-working_area_size, ref3[1]-working_area_size),
+            (ref3[0]+working_area_size, ref3[1]+working_area_size), (0, 255, 0), 3
         )
 
         # Process Ending Area
         cv2.rectangle(
-            img, (ref2[0]-30, ref2[1]-30),
-            (ref2[0]+30, ref2[1]+30), (255, 255, 0), 3
+            img, (ref2[0]-end_area_size, ref2[1]-end_area_size),
+            (ref2[0]+end_area_size, ref2[1]+end_area_size), (255, 255, 0), 3
         )
 
         # Flip Webcam feed
@@ -105,14 +117,14 @@ if st.checkbox('Start Process'):
             if len(line_points) > 0:
 
                 # Working Area
-                if (ref3[0]-80) < line_points[0][0] < (ref3[0]+80) and (ref3[1]-80) < line_points[0][1] < (ref3[1]+80):
+                if (ref3[0]-working_area_size) < line_points[0][0] < (ref3[0]+working_area_size) and (ref3[1]-working_area_size) < line_points[0][1] < (ref3[1]+working_area_size):
                     cv2.putText(
                         img, 'Work Started!!', (40, 50),
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
                     )
 
-                if (ref2[0]-30) < line_points[0][0] < (ref2[0]+30):
-                    if (ref2[1]-30) < line_points[0][1] < (ref2[1]+30):
+                if (ref2[0]-end_area_size) < line_points[0][0] < (ref2[0]+end_area_size):
+                    if (ref2[1]-end_area_size) < line_points[0][1] < (ref2[1]+end_area_size):
                         cv2.putText(
                             img, 'Work Ended!!', (40, 50),
                             cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
