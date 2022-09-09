@@ -89,8 +89,8 @@ while True:
 
     # Working Area
     cv2.rectangle(
-        img, (ref3[0]-working_area_size, ref3[1]-working_area_size),
-        (ref3[0]+working_area_size, ref3[1]+working_area_size), (0, 255, 0), 3
+        img, (ref1[0]-working_area_size, ref1[1]-working_area_size),
+        (ref1[0]+working_area_size, ref1[1]+working_area_size), (0, 255, 0), 3
     )
 
     # Process Ending Area
@@ -122,7 +122,7 @@ while True:
         if len(line_points) > 0:
 
             # Working Area
-            if (ref3[0]-working_area_size) < line_points[0][0] < (ref3[0]+working_area_size) and (ref3[1]-working_area_size) < line_points[0][1] < (ref3[1]+working_area_size):
+            if (ref1[0]-working_area_size) < line_points[0][0] < (ref1[0]+working_area_size) and (ref1[1]-working_area_size) < line_points[0][1] < (ref1[1]+working_area_size):
                 cv2.putText(
                     img, 'Work Progressing..', (40, 50),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
