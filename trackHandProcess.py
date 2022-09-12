@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import os
 import argparse
+import pyshine as ps
 
 
 ap = argparse.ArgumentParser()
@@ -102,10 +103,17 @@ while True:
     )
 
     # total_work_done
-    cv2.putText(
-        img, f'Total Work Done: {total_work_done}',
-        (40, 90), cv2.FONT_HERSHEY_PLAIN,
-        3, (255, 0, 255), 3
+    # cv2.putText(
+    #     img, f'Total Work Done: {total_work_done}',
+    #     (40, 90), cv2.FONT_HERSHEY_PLAIN,
+    #     3, (255, 0, 255), 3
+    # )
+
+    ps.putBText(
+        img,f'Total Work Done: {total_work_done}',
+        text_offset_x=20,text_offset_y=20,vspace=20,
+        hspace=20, font_scale=1.0,
+        background_RGB=(0,250,250),text_RGB=(255,255,255)
     )
 
     # Flip Webcam feed
@@ -132,18 +140,30 @@ while True:
 
             # Working Area
             if (ref1[0]-working_area_size) < line_points[0][0] < (ref1[0]+working_area_size) and (ref1[1]-working_area_size) < line_points[0][1] < (ref1[1]+working_area_size):
-                cv2.putText(
-                    img, 'Work in Progress..', (40, 50),
-                    cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
+                # cv2.putText(
+                #     img, 'Work in Progress..', (40, 50),
+                #     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
+                # )
+                ps.putBText(
+                    img, 'Work in Progress..',
+                    text_offset_x=20, text_offset_y=83,
+                    vspace=20, hspace=20, font_scale=1.0,
+                    background_RGB=(0,220,0), text_RGB=(255,255,255)
                 )
                 
                 Flage = 1
 
             if (ref2[0]-end_area_size) < line_points[0][0] < (ref2[0]+end_area_size):
                 if (ref2[1]-end_area_size) < line_points[0][1] < (ref2[1]+end_area_size):
-                    cv2.putText(
-                        img, 'Work Done!!', (40, 50),
-                        cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
+                    # cv2.putText(
+                    #     img, 'Work Done!!', (40, 50),
+                    #     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
+                    # )
+                    ps.putBText(
+                        img, 'Work Done!!',
+                        text_offset_x=20, text_offset_y=83,
+                        vspace=20, hspace=20, font_scale=1.0,
+                        background_RGB=(255,225,0), text_RGB=(255,255,255)
                     )
 
                     if Flage == 1:
