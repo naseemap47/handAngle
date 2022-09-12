@@ -52,6 +52,8 @@ ref3 = (int(source_width*0.46875), int(source_height*0.375))
 
 working_area_size = 130
 end_area_size = 35
+total_work_done = 0
+Flage = 0
 
 while True:
     success, img = cap.read()
@@ -99,6 +101,13 @@ while True:
         (ref2[0]+end_area_size, ref2[1]+end_area_size), (255, 255, 0), 3
     )
 
+    # total_work_done
+    cv2.putText(
+        img, f'Total Work Done: {total_work_done}',
+        (40, 90), cv2.FONT_HERSHEY_PLAIN,
+        3, (255, 0, 255), 3
+    )
+
     # Flip Webcam feed
     # img = cv2.flip(img, -1)
 
@@ -124,16 +133,23 @@ while True:
             # Working Area
             if (ref1[0]-working_area_size) < line_points[0][0] < (ref1[0]+working_area_size) and (ref1[1]-working_area_size) < line_points[0][1] < (ref1[1]+working_area_size):
                 cv2.putText(
-                    img, 'Work Progressing..', (40, 50),
+                    img, 'Work in Progress..', (40, 50),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3
                 )
+                
+                Flage = 1
 
             if (ref2[0]-end_area_size) < line_points[0][0] < (ref2[0]+end_area_size):
                 if (ref2[1]-end_area_size) < line_points[0][1] < (ref2[1]+end_area_size):
                     cv2.putText(
-                        img, 'Work Ended!!', (40, 50),
+                        img, 'Work Done!!', (40, 50),
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3
                     )
+
+                    if Flage == 1:
+                        total_work_done += 1
+                        Flage = 0                  
+                
                 else:
                     os.system('spd-say "Warning"')
                     cv2.putText(
@@ -141,11 +157,11 @@ while True:
                         cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
                     )
 
-        else:
-            cv2.putText(
-                img, 'Hand NOT Detected!!', (40, 50),
-                cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
-            )
+        # else:
+        #     cv2.putText(
+        #         img, 'Hand NOT Detected!!', (40, 50),
+        #         cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
+        #     )
     # Write Video
     if save:
         result.write(img)
