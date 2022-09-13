@@ -47,14 +47,20 @@ mp_draw = mp.solutions.drawing_utils
 # ref2 = (int(source_width*0.109375), int(source_height*0.375))
 # ref3 = (int(source_width*0.46875), int(source_height*0.375))
 
+# Working Area
 ref1 = (int(source_width*0.46875), 450)
-ref2 = (1000, 450)
+
+# Process Ending Area
+ref2 = (900, 450)
+
+# Top point
 ref3 = (int(source_width*0.46875), int(source_height*0.375))
 
 working_area_size = 130
 end_area_size = 35
 total_work_done = 0
 Flage = 0
+warning_flage = 0
 
 while True:
     success, img = cap.read()
@@ -116,6 +122,14 @@ while True:
         background_RGB=(0,250,250),text_RGB=(255,255,255)
     )
 
+    if warning_flage == 1:
+        ps.putBText(
+            img, 'Warning',
+            text_offset_x=600,text_offset_y=20,vspace=20,
+            hspace=20, font_scale=1.0,
+            background_RGB=(255,0,0),text_RGB=(255,255,255)
+        )
+
     # Flip Webcam feed
     # img = cv2.flip(img, -1)
 
@@ -150,7 +164,7 @@ while True:
                     vspace=20, hspace=20, font_scale=1.0,
                     background_RGB=(0,220,0), text_RGB=(255,255,255)
                 )
-                
+                warning_flage = 0
                 Flage = 1
 
             if (ref2[0]-end_area_size) < line_points[0][0] < (ref2[0]+end_area_size):
@@ -172,10 +186,11 @@ while True:
                 
                 else:
                     os.system('spd-say "Warning"')
-                    cv2.putText(
-                        img, 'Warning!!', (40, 50),
-                        cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
-                    )
+                    # cv2.putText(
+                    #     img, 'Warning!!', (40, 50),
+                    #     cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3
+                    # )
+                    warning_flage = 1
 
         # else:
         #     cv2.putText(
